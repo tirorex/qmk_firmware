@@ -1,0 +1,11 @@
+VIA_ENABLE = no
+RGB_MATRIX_ENABLE = no
+ENCODER_MAP_ENABLE = yes
+TAP_DANCE_ENABLE = yes
+SEND_STRING_ENABLE = yes
+LEADER_ENABLE = yes
+BOOTMAGIC_ENABLE = yes
+CONSOLE_ENABLE = no         # Console for debug
+COMMAND_ENABLE = yes        # Commands for debug and configuration
+TRI_LAYER_ENABLE = yes
+LTO_ENABLE = yes
