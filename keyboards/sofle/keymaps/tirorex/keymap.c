@@ -20,7 +20,8 @@
 enum souffle_layers {
     MAIN = 0,
     _NUMPAD,
-    LOW = 2,
+    USUAL,
+    LOW,
     HIGH,
     ADJUST
 };
@@ -99,9 +100,12 @@ static void print_status_narrow(void) {
         case ADJUST:
             oled_write_P(PSTR("Adjust"), false);
             break;        
+        case USUAL:
+            oled_write_P(PSTR("U"), false);
+            break;   
         case _NUMPAD:
             oled_write_P(PSTR("Numpad"), false);
-            break;   
+            break; 
         default:
             oled_write_ln_P(PSTR("Undef"), false);
 
@@ -169,6 +173,10 @@ enum {
     TD_HARD_ZNAK
 };
 
+
+combo_t key_combos[] = {
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
  * QWERTY
@@ -189,9 +197,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [MAIN] = LAYOUT(
   KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    TT(HIGH),                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_RBRC,
   KC_ESC,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,  KC_LBRC,
-  KC_TAB,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN,  KC_QUOT,
+  KC_TAB,   KC_A,   MT(MOD_LALT, KC_S),    MT(MOD_LCTL,KC_D),    MT(MOD_LSFT, KC_F),    KC_G,                     KC_H,     MT(MOD_RSFT, KC_J),  MT(MOD_RCTL,KC_K),   MT(MOD_LALT, KC_L), KC_SCLN,  KC_QUOT,
   KC_GRV,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,     KC_MUTE,KC_N,    KC_M, KC_COMM,  CS_00, TD(TD_HARD_ZNAK), KC_RBRC,
-                 KC_LSFT,KC_LALT,KC_LCTL, MO(LOW), KC_ENT,      KC_SPC,  LT(HIGH, KC_BSPC), KC_F13, KC_LGUI, KC_RSFT
+                 KC_LSFT,KC_LALT,KC_LCTL, MO(LOW), MT(MOD_LSFT, KC_ENT),      MT(MOD_LSFT, KC_SPC),  LT(HIGH, KC_BSPC), KC_F13, KC_LGUI, KC_RSFT
+),
+[USUAL] = LAYOUT(
+  TG(USUAL),   KC_1,   KC_2,    KC_3,    KC_4,    TT(HIGH),                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_RBRC,
+  KC_ESC,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,  KC_LBRC,
+  KC_TAB,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,  KC_K,    KC_L, KC_SCLN,  KC_QUOT,
+  KC_GRV,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,     KC_MUTE,KC_N,    KC_M, KC_COMM,  CS_00, TD(TD_HARD_ZNAK), KC_RBRC,
+                 KC_LSFT,KC_LALT,KC_LCTL, MO(LOW), MT(MOD_LSFT, KC_ENT),      MT(MOD_LSFT, KC_SPC),  LT(HIGH, KC_BSPC), KC_F13, KC_LGUI, KC_RSFT
 ),
 /* NUMPAD
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -237,8 +252,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [LOW] = LAYOUT(
   CH_LANG,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                       KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_F12,
-  S(KC_EQL), _LCBR,   _RCBR, _LT,  _GT, S(KC_MINS),                       KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,
-  _PIPE,  _BSLS, _LBRC, _RBRC, MO(ADJUST), TG(_NUMPAD), _______,       _______, KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______,
+  KC_CAPS, _LCBR,   _RCBR, _LT,  _GT, TG(USUAL),                       KC_BTN1, KC_MS_L, KC_MS_UP, KC_MS_DOWN, KC_MS_R, KC_PIPE,
+  _PIPE,  _BSLS, _LBRC, _RBRC, MO(ADJUST), TG(_NUMPAD), _______,       _______, KC_WH_U, KC_WH_D, KC_SCLN, KC_COLN, KC_BSLS, _______,
                        _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______
 ),
 /* RAISE
@@ -287,7 +302,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-
+/* uint16_t get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MT(MOD_LSFT, KC_F):
+            return TAPPING_TERM - 100;
+        case MT(MOD_RSFT, KC_J):
+            return TAPPING_TERM - 100;
+        case MT(MOD_LCTL, KC_D):
+            return TAPPING_TERM + 200;
+        case MT(MOD_RCTL, KC_K):
+            return TAPPING_TERM + 200;
+        default:
+            return TAPPING_TERM;
+    }
+}; */
 
 void switch_language(void) {
     // Если переключение языка в системе ALT+SHIFT
