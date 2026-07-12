@@ -208,8 +208,8 @@ bool oled_task_user(void) {
         oled_write_ln_P(PSTR("Undefined"), false);
     }
 
-    oled_write_ln(read_keylog(), false);
-    oled_write_ln(read_keylogs(), false);
+    //oled_write_ln(read_keylog(), false);
+    //oled_write_ln(read_keylogs(), false);
 
   } else {
       render_logo();

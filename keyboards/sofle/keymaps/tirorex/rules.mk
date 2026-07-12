@@ -10,10 +10,12 @@ BOOTMAGIC_ENABLE = yes
 CONSOLE_ENABLE = no         # Console for debug
 COMMAND_ENABLE = yes        # Commands for debug and configuration
 TRI_LAYER_ENABLE = no
-LTO_ENABLE = yes
+#LTO_ENABLE = yes
 MOUSEKEY_ENABLE  = yes
 OLED_ENABLE = yes
 COMBO_ENABLE = yes
-#EXTRAFLAGS += -flto
+CAPS_WORD_ENABLE = yes
+#EXTRAFLAGS += -flto=auto
+BOOTLOADER = caterina
 
 DYNAMIC_TAPPING_TERM_ENABLE = no
