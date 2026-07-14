@@ -201,7 +201,13 @@ enum custome_keycodes {
     LS_LBRC,
     LS_RBRC,
     LS_LPRN,
-    LS_RPRN
+    LS_RPRN,
+    LS_SLSH,
+    LS_PIPE,
+    LS_DLR, 
+    LS_ASTR,
+    LS_CIRC,
+    LS_BSLS
 };
 
 enum {
@@ -239,9 +245,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [MAIN] = LAYOUT(
   KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_RBRC,
   KC_ESC,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T    ,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     KC_LBRC,
-  KC_TAB,   KC_A ,  KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,  KC_QUOT,
+  KC_TAB,   KC_A ,  KC_S,    KC_D,   MT(MOD_LSFT, KC_F),    KC_G,     KC_H,    MT(MOD_RSFT,KC_J),    KC_K,    KC_L,    KC_SCLN,  KC_QUOT,
   KC_GRV,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,     KC_MUTE,   KC_N,    KC_M,    KC_COMM, CS_00,   TD(TD_HZ),KC_RBRC,
-  KC_LALT,          KC_LALT, KC_LCTL, L_CH_LANG, M_ENT,                      M_SPC,   L_BSPC,  KC_LCTL,  KC_LGUI,           KC_RSFT
+  KC_LALT,          KC_LALT, KC_LCTL, L_CH_LANG, KC_SPC,                      KC_SPC,   L_BSPC,  KC_LCTL,  KC_LGUI,           KC_RSFT
 ),
 [USUAL] = LAYOUT(
   TG(USUAL), KC_1,   KC_2,    KC_3,    KC_4,   KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_RBRC,
@@ -293,9 +299,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [LOW] = LAYOUT(
   CH_KB_LANG,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-  CH_LAYOUT,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_PAST, KC_F12,
-  KC_CAPS,   LS_LCBR,   LS_RCBR,   LS_LBRC,   LS_RBRC,   _PIPE,                          KC_PPLS, KC_4,    KC_5,    KC_6,    KC_PSLS,  KC_PSLS,
-  _______,   _AMPR, _PERC,   _BSLS,  LS_LT,      LS_GT, TG(_NUMPAD) ,            TG(USUAL),KC_PMNS, KC_1,    KC_2,    KC_3,    KC_EQL, _______,
+  CH_LAYOUT,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_PPLS,    KC_7,    KC_8,    KC_9,    KC_PAST, KC_F12,
+  KC_CAPS,   LS_LCBR,   LS_RCBR,   LS_LBRC,   LS_RBRC,   _PIPE,                  KC_ENT, KC_4,    KC_5,    KC_6,    KC_PSLS,  KC_PSLS,
+  _______,   _AMPR, _PERC,   LS_BSLS,  LS_LT,      LS_GT, TG(_NUMPAD) ,            TG(USUAL),KC_PMNS, KC_1,    KC_2,    KC_3,    KC_EQL, _______,
                       _______, _______, _______, _______, _______,       _______, KC_0, KC_PDOT, _______, _______
 ),
 /* RAISE
@@ -314,9 +320,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [HIGH] = LAYOUT(
   _______, _______ , _______ , _______ , _______ , _______,          _LCBR,  _RCBR  , _LT,  _GT ,  S(KC_MINS) ,_PERC,
-  CW_TOGG,  _ASTR,  LS_AT,   LS_HASH,  _DLR, _CIRC,                        KC_PGUP, _PIPE,   KC_UP, KC_HOME,KC_END, KC_RBRC,
+  CW_TOGG,  LS_ASTR,  LS_AT,   LS_HASH,  LS_DLR, LS_CIRC,                        KC_PGUP, LS_PIPE,   KC_UP, KC_HOME,KC_END, KC_RBRC,
   _SCLN, _DQUO,  _QUOT,  _QUES,_EXLM  , _COLN,                       KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, KC_BSPC,
-  KC_EQL, S(KC_EQL),S(KC_MINS), KC_MINS, LS_LPRN, LS_RPRN,  _______,       _______,  QK_LEAD, _SLSH, KC_INS, _______,   XXXXXXX, _______,
+  KC_EQL, S(KC_EQL),S(KC_MINS), KC_MINS, LS_LPRN, LS_RPRN,  _______,       _______,  QK_LEAD, LS_SLSH, KC_INS, _______,   XXXXXXX, _______,
                          _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______
 ),
 /* ADJUST
@@ -494,7 +500,25 @@ uint8_t mods;
 static bool _pressed = false;
 
 
-void sw_lang(enum custome_keycodes KC, keyrecord_t *record){
+void sw_lang1(uint16_t EN_KC, uint16_t RU_KC, keyrecord_t *record){
+    if (record->event.pressed){
+        if (kb_language == RUSSIAN){              
+                register_code16(RU_KC);
+            }
+        else if (kb_language == ENGLISH){
+                register_code16(EN_KC);
+        }
+    } else {
+        if (kb_language == RUSSIAN){       
+                unregister_code16(RU_KC);  
+            }
+        else if (kb_language == ENGLISH){
+                unregister_code16(EN_KC);
+        }
+    }
+}
+
+void sw_lang(uint16_t KC, keyrecord_t *record){
     if (record->event.pressed){
         if (kb_language == RUSSIAN){
                 if (!_pressed) {
@@ -753,49 +777,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         }
         return false;
-    }  
-
-    case _ASTR:{
-        if (record->event.pressed){
-            if (kb_language == RUSSIAN){
-                    register_code16(KC_PAST);
-                }
-            else if (kb_language == ENGLISH){
-                    register_code16(KC_ASTR);
-            }
-        } else {
-            if (kb_language == RUSSIAN){
-                    unregister_code16(KC_PAST);
-                }
-            else if (kb_language == ENGLISH){
-                    unregister_code16(KC_ASTR);
-            }
-        }
-        return false;
     }      
-    case _CIRC:{
-        if (record->event.pressed){
-            if (kb_language == RUSSIAN){
-                    mods |= MOD_BIT(KC_LALT);
-                    set_mods(mods);
-                    register_code16(KC_P9);
-                    register_code16(KC_P4);
-                    set_mods(mod_state);   
-                }
-            else if (kb_language == ENGLISH){
-                    register_code16(KC_CIRC);
-            }
-        } else {
-            if (kb_language == RUSSIAN){
-                    unregister_code16(KC_P9);
-                    unregister_code16(KC_P4);
-                }
-            else if (kb_language == ENGLISH){
-                    unregister_code16(KC_CIRC);
-            }
-        }
-        return false;
-    }     
     case _PERC:{
         if (record->event.pressed){
             if (kb_language == RUSSIAN){
@@ -813,68 +795,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         }
         return false;
-    } 
-    case _PIPE:{
-        if (record->event.pressed){
-            if (kb_language == RUSSIAN){
-                    mods |= MOD_BIT(KC_LALT);
-                    set_mods(mods);
-                    register_code16(KC_P1);
-                    register_code16(KC_P2);
-                    register_code16(KC_P4);
-                    set_mods(mod_state);   
-                }
-            else if (kb_language == ENGLISH){
-                    register_code16(KC_PIPE);
-            }
-        } else {
-            if (kb_language == RUSSIAN){
-                    unregister_code16(KC_P1);
-                    unregister_code16(KC_P2);
-                    unregister_code16(KC_P4);
-                }
-            else if (kb_language == ENGLISH){
-                    unregister_code16(KC_PIPE);
-            }
-        }
-        return false;
-    }    
-    case _SLSH:{
-        if (record->event.pressed){
-            if (kb_language == RUSSIAN){
-                    register_code16(KC_PSLS);
-                }
-            else if (kb_language == ENGLISH){
-                    register_code16(KC_SLSH);
-            }
-        } else {
-            if (kb_language == RUSSIAN){
-                    unregister_code16(KC_PSLS);
-                }
-            else if (kb_language == ENGLISH){
-                    unregister_code16(KC_SLSH);
-            }
-        }
-        return false;
-    }
-    case _BSLS:{
-        if (record->event.pressed){
-            if (kb_language == RUSSIAN){
-                    register_code16(KC_BSLS);
-                }
-            else if (kb_language == ENGLISH){
-                    register_code16(KC_BSLS);
-            }
-        } else {
-            if (kb_language == RUSSIAN){
-                    unregister_code16(KC_BSLS);
-                }
-            else if (kb_language == ENGLISH){
-                    unregister_code16(KC_BSLS);
-            }
-        }
-        return false;
-    }    
+    }  
     case _AMPR:{
         if (record->event.pressed){
             if (kb_language == RUSSIAN){
@@ -898,31 +819,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
     }
-
-    case _DLR:{
-        if (record->event.pressed){
-            if (kb_language == RUSSIAN){
-                    mods |= MOD_BIT(KC_LALT);
-                    set_mods(mods);
-                    register_code16(KC_P3);
-                    register_code16(KC_P6);
-                    set_mods(mod_state);
-                }
-            else if (kb_language == ENGLISH){
-                    register_code16(KC_DLR);
-            }
-        } else {
-            if (kb_language == RUSSIAN){
-                    unregister_code16(KC_P3);
-                    unregister_code16(KC_P6);
-                }
-            else if (kb_language == ENGLISH){
-                    unregister_code16(KC_DLR);
-            }
-        }
-        return false;
-    }
-
     case LS_AT:{
         sw_lang(KC_AT, record);
         return false;
@@ -956,13 +852,43 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     } 
     case LS_LPRN:{
-        sw_lang(KC_LPRN, record);
+        //sw_lang(KC_LPRN, record);
+        sw_lang1(KC_LPRN, S(KC_9), record);
         return false;
     }   
     case LS_RPRN:{
-        sw_lang(KC_RPRN, record);
+        //sw_lang(KC_RPRN, record);
+        sw_lang1(KC_RPRN, S(KC_0), record);
         return false;
     } 
+    case LS_SLSH:{
+        sw_lang1(KC_SLSH, KC_PSLS, record);
+        return false;
+    } 
+    case LS_PIPE:{
+        sw_lang(KC_PIPE, record);
+        return false;
+    } 
+    case LS_DLR:{
+        sw_lang(KC_DLR, record);
+        return false;
+    } 
+    case LS_ASTR:{
+        sw_lang1(KC_ASTR, KC_PAST, record);
+        return false;
+    } 
+    case LS_CIRC:{
+        sw_lang(KC_CIRC, record);
+        return false;
+    }     
+    case LS_BSLS:{
+       if (record->event.pressed){
+            register_code16(KC_BSLS);
+        } else {
+            unregister_code16(KC_BSLS);
+        }
+        return false;
+    }
 }
 
 
