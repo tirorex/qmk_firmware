@@ -52,7 +52,17 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif
 
-
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MT(MOD_RSFT,KC_J):
+        case MT(MOD_LSFT, KC_F):
+            // Immediately select the hold action when another key is pressed.
+            return true;
+        default:
+            // Do not select the hold action when another key is pressed.
+            return false;
+    }
+}
 
 void leader_end_user(void) {
         if (leader_sequence_two_keys(KC_F, KC_Q)) {
@@ -245,9 +255,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [MAIN] = LAYOUT(
   KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_RBRC,
   KC_ESC,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T    ,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     KC_LBRC,
-  KC_TAB,   KC_A ,  KC_S,    KC_D,   MT(MOD_LSFT, KC_F),    KC_G,     KC_H,    MT(MOD_RSFT,KC_J),    KC_K,    KC_L,    KC_SCLN,  KC_QUOT,
+  KC_TAB,   KC_A ,  KC_S,    KC_D,    KC_F,    KC_G,     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,  KC_QUOT,
   KC_GRV,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_MUTE,     KC_MUTE,   KC_N,    KC_M,    KC_COMM, CS_00,   TD(TD_HZ),KC_RBRC,
-  KC_LALT,          KC_LALT, KC_LCTL, L_CH_LANG, KC_SPC,                      KC_SPC,   L_BSPC,  KC_LCTL,  KC_LGUI,           KC_RSFT
+  KC_LALT,          KC_LALT, KC_LCTL, L_CH_LANG, M_SPC,                      M_SPC,   L_BSPC,  KC_LCTL,  KC_LGUI,           KC_RSFT
 ),
 [USUAL] = LAYOUT(
   TG(USUAL), KC_1,   KC_2,    KC_3,    KC_4,   KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_RBRC,
